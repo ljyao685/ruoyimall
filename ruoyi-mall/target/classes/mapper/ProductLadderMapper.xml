@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.product.mapper.ProductLadderMapper">
+
+    <resultMap type="ProductLadder" id="ProductLadderResult">
+        <result property="id" column="id"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="remark" column="remark"/>
+        <result property="searchValue" column="search_value"/>
+        <result property="tenantId" column="tenant_id"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="count" column="count"/>
+        <result property="discount" column="discount"/>
+        <result property="price" column="price"/>
+        <result property="productId" column="product_id"/>
+    </resultMap>
+
+    <sql id="selectProductLadderVo">
+        select id,
+               create_by,
+               create_time,
+               remark,
+               search_value,
+               tenant_id,
+               update_by,
+               update_time,
+               count,
+               discount,
+               price,
+               product_id
+        from p_product_ladder
+    </sql>
+
+    <select id="selectProductLadderList" parameterType="ProductLadder" resultMap="ProductLadderResult">
+        <include refid="selectProductLadderVo"/>
+        <where>
+            <if test="searchValue != null  and searchValue != ''">and search_value = #{searchValue}</if>
+            <if test="tenantId != null ">and tenant_id = #{tenantId}</if>
+            <if test="count != null ">and count = #{count}</if>
+            <if test="discount != null ">and discount = #{discount}</if>
+            <if test="price != null ">and price = #{price}</if>
+            <if test="productId != null ">and product_id = #{productId}</if>
+        </where>
+    </select>
+
+    <select id="selectProductLadderById" parameterType="Long" resultMap="ProductLadderResult">
+        <include refid="selectProductLadderVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertProductLadder" parameterType="ProductLadder" useGeneratedKeys="true" keyProperty="id">
+        insert into p_product_ladder
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="searchValue != null">search_value,</if>
+            <if test="tenantId != null">tenant_id,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="count != null">count,</if>
+            <if test="discount != null">discount,</if>
+            <if test="price != null">price,</if>
+            <if test="productId != null">product_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="searchValue != null">#{searchValue},</if>
+            <if test="tenantId != null">#{tenantId},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="count != null">#{count},</if>
+            <if test="discount != null">#{discount},</if>
+            <if test="price != null">#{price},</if>
+            <if test="productId != null">#{productId},</if>
+        </trim>
+    </insert>
+
+    <insert id="insertProductLadderList">
+        INSERT INTO p_product_ladder (tenant_id, create_by, create_time, product_id, count,
+        discount, price) VALUES
+        <foreach collection="list" separator="," item="item" index="index">
+            (#{item.tenantId},
+            #{item.createBy},
+            #{item.createTime},
+            #{item.productId},
+            #{item.count},
+            #{item.discount},
+            #{item.price})
+        </foreach>
+    </insert>
+
+    <update id="updateProductLadder" parameterType="ProductLadder">
+        update p_product_ladder
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="searchValue != null">search_value = #{searchValue},</if>
+            <if test="tenantId != null">tenant_id = #{tenantId},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="count != null">count = #{count},</if>
+            <if test="discount != null">discount = #{discount},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="productId != null">product_id = #{productId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteProductLadderByProductId" parameterType="Long">
+        delete
+        from p_product_ladder
+        where product_id = #{productId}
+    </delete>
+
+    <delete id="deleteProductLadderById" parameterType="Long">
+        delete
+        from p_product_ladder
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteProductLadderByIds" parameterType="Long">
+        delete from p_product_ladder where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

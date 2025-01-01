@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.product.mapper.ProductFullReductionMapper">
+
+    <resultMap type="ProductFullReduction" id="ProductFullReductionResult">
+        <result property="id" column="id"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="remark" column="remark"/>
+        <result property="searchValue" column="search_value"/>
+        <result property="tenantId" column="tenant_id"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="fullPrice" column="full_price"/>
+        <result property="productId" column="product_id"/>
+        <result property="reducePrice" column="reduce_price"/>
+    </resultMap>
+
+    <sql id="selectProductFullReductionVo">
+        select id,
+               create_by,
+               create_time,
+               remark,
+               search_value,
+               tenant_id,
+               update_by,
+               update_time,
+               full_price,
+               product_id,
+               reduce_price
+        from p_product_full_reduction
+    </sql>
+
+    <select id="selectProductFullReductionList" parameterType="ProductFullReduction"
+            resultMap="ProductFullReductionResult">
+        <include refid="selectProductFullReductionVo"/>
+        <where>
+            <if test="searchValue != null  and searchValue != ''">and search_value = #{searchValue}</if>
+            <if test="tenantId != null ">and tenant_id = #{tenantId}</if>
+            <if test="fullPrice != null ">and full_price = #{fullPrice}</if>
+            <if test="productId != null ">and product_id = #{productId}</if>
+            <if test="reducePrice != null ">and reduce_price = #{reducePrice}</if>
+        </where>
+    </select>
+
+    <select id="selectProductFullReductionById" parameterType="Long" resultMap="ProductFullReductionResult">
+        <include refid="selectProductFullReductionVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertProductFullReduction" parameterType="ProductFullReduction" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into p_product_full_reduction
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="searchValue != null">search_value,</if>
+            <if test="tenantId != null">tenant_id,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="fullPrice != null">full_price,</if>
+            <if test="productId != null">product_id,</if>
+            <if test="reducePrice != null">reduce_price,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="searchValue != null">#{searchValue},</if>
+            <if test="tenantId != null">#{tenantId},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="fullPrice != null">#{fullPrice},</if>
+            <if test="productId != null">#{productId},</if>
+            <if test="reducePrice != null">#{reducePrice},</if>
+        </trim>
+    </insert>
+
+    <insert id="insertProductFullReductionList">
+        INSERT INTO p_product_full_reduction (tenant_id, create_by, create_time, product_id, full_price, reduce_price)
+        VALUES
+        <foreach collection="list" separator="," item="item" index="index">
+            (#{item.tenantId},
+            #{item.createBy},
+            #{item.createTime},
+            #{item.productId},
+            #{item.fullPrice},
+            #{item.reducePrice})
+        </foreach>
+    </insert>
+
+    <update id="updateProductFullReduction" parameterType="ProductFullReduction">
+        update p_product_full_reduction
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="searchValue != null">search_value = #{searchValue},</if>
+            <if test="tenantId != null">tenant_id = #{tenantId},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="fullPrice != null">full_price = #{fullPrice},</if>
+            <if test="productId != null">product_id = #{productId},</if>
+            <if test="reducePrice != null">reduce_price = #{reducePrice},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteProductFullReductionByProductId" parameterType="Long">
+        delete
+        from p_product_full_reduction
+        where product_id = #{productId}
+    </delete>
+
+    <delete id="deleteProductFullReductionById" parameterType="Long">
+        delete
+        from p_product_full_reduction
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteProductFullReductionByIds" parameterType="Long">
+        delete from p_product_full_reduction where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

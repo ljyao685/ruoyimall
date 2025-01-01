@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.product.mapper.ProductCategoryAttributeRelationMapper">
+
+    <resultMap type="ProductCategoryAttributeRelation" id="ProductCategoryAttributeRelationResult">
+        <result property="id" column="id"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="remark" column="remark"/>
+        <result property="searchValue" column="search_value"/>
+        <result property="tenantId" column="tenant_id"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="productAttributeId" column="product_attribute_id"/>
+        <result property="productCategoryId" column="product_category_id"/>
+    </resultMap>
+
+    <sql id="selectProductCategoryAttributeRelationVo">
+        select id,
+               create_by,
+               create_time,
+               remark,
+               search_value,
+               tenant_id,
+               update_by,
+               update_time,
+               product_attribute_id,
+               product_category_id
+        from p_product_category_attribute_relation
+    </sql>
+
+    <select id="selectProductCategoryAttributeRelationList" parameterType="ProductCategoryAttributeRelation"
+            resultMap="ProductCategoryAttributeRelationResult">
+        <include refid="selectProductCategoryAttributeRelationVo"/>
+        <where>
+        </where>
+    </select>
+
+    <select id="selectProductCategoryAttributeRelationById" parameterType="Long"
+            resultMap="ProductCategoryAttributeRelationResult">
+        <include refid="selectProductCategoryAttributeRelationVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertProductCategoryAttributeRelation" parameterType="ProductCategoryAttributeRelation"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into p_product_category_attribute_relation
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="searchValue != null">search_value,</if>
+            <if test="tenantId != null">tenant_id,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="productAttributeId != null">product_attribute_id,</if>
+            <if test="productCategoryId != null">product_category_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="searchValue != null">#{searchValue},</if>
+            <if test="tenantId != null">#{tenantId},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="productAttributeId != null">#{productAttributeId},</if>
+            <if test="productCategoryId != null">#{productCategoryId},</if>
+        </trim>
+    </insert>
+
+    <!--批量新增-->
+    <insert id="insertProductCategoryAttributeRelationList">
+        insert into p_product_category_attribute_relation (create_by, create_time, tenant_id, product_category_id,
+        product_attribute_id) VALUES
+        <foreach collection="list" separator="," item="item" index="index">
+            (#{item.createBy},#{item.createTime},#{item.tenantId},#{item.productCategoryId},#{item.productAttributeId})
+        </foreach>
+    </insert>
+
+    <update id="updateProductCategoryAttributeRelation" parameterType="ProductCategoryAttributeRelation">
+        update p_product_category_attribute_relation
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="searchValue != null">search_value = #{searchValue},</if>
+            <if test="tenantId != null">tenant_id = #{tenantId},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="productAttributeId != null">product_attribute_id = #{productAttributeId},</if>
+            <if test="productCategoryId != null">product_category_id = #{productCategoryId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteProductCategoryAttributeRelationByProdCateId" parameterType="Long">
+        delete
+        from p_product_category_attribute_relation
+        where product_category_id = #{productCategoryId}
+    </delete>
+
+    <delete id="deleteProductCategoryAttributeRelationById" parameterType="Long">
+        delete
+        from p_product_category_attribute_relation
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteProductCategoryAttributeRelationByIds" parameterType="Long">
+        delete from p_product_category_attribute_relation where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

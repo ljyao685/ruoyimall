@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.product.mapper.ProductSkuStockMapper">
+
+    <resultMap type="ProductSkuStock" id="ProductSkuStockResult">
+        <result property="id" column="id"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="remark" column="remark"/>
+        <result property="searchValue" column="search_value"/>
+        <result property="tenantId" column="tenant_id"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="lockStock" column="lock_stock"/>
+        <result property="lowStock" column="low_stock"/>
+        <result property="pic" column="pic"/>
+        <result property="price" column="price"/>
+        <result property="productId" column="product_id"/>
+        <result property="promotionPrice" column="promotion_price"/>
+        <result property="sale" column="sale"/>
+        <result property="skuCode" column="sku_code"/>
+        <result property="spData" column="sp_data"/>
+        <result property="stock" column="stock"/>
+    </resultMap>
+
+    <sql id="selectProductSkuStockVo">
+        select id,
+               create_by,
+               create_time,
+               remark,
+               search_value,
+               tenant_id,
+               update_by,
+               update_time,
+               lock_stock,
+               low_stock,
+               pic,
+               price,
+               product_id,
+               promotion_price,
+               sale,
+               sku_code,
+               sp_data,
+               stock
+        from p_product_sku_stock
+    </sql>
+
+    <select id="selectProductSkuStockList" parameterType="ProductSkuStock" resultMap="ProductSkuStockResult">
+        <include refid="selectProductSkuStockVo"/>
+        <where>
+            <if test="productId != null ">and product_id = #{productId}</if>
+            <if test="skuCode != null  and skuCode != ''">and sku_code like concat('%', #{skuCode}, '%')</if>
+        </where>
+    </select>
+
+    <select id="selectProductSkuStockById" parameterType="Long" resultMap="ProductSkuStockResult">
+        <include refid="selectProductSkuStockVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertProductSkuStock" parameterType="ProductSkuStock" useGeneratedKeys="true" keyProperty="id">
+        insert into p_product_sku_stock
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="searchValue != null">search_value,</if>
+            <if test="tenantId != null">tenant_id,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="lockStock != null">lock_stock,</if>
+            <if test="lowStock != null">low_stock,</if>
+            <if test="pic != null">pic,</if>
+            <if test="price != null">price,</if>
+            <if test="productId != null">product_id,</if>
+            <if test="promotionPrice != null">promotion_price,</if>
+            <if test="sale != null">sale,</if>
+            <if test="skuCode != null">sku_code,</if>
+            <if test="spData != null">sp_data,</if>
+            <if test="stock != null">stock,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="searchValue != null">#{searchValue},</if>
+            <if test="tenantId != null">#{tenantId},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="lockStock != null">#{lockStock},</if>
+            <if test="lowStock != null">#{lowStock},</if>
+            <if test="pic != null">#{pic},</if>
+            <if test="price != null">#{price},</if>
+            <if test="productId != null">#{productId},</if>
+            <if test="promotionPrice != null">#{promotionPrice},</if>
+            <if test="sale != null">#{sale},</if>
+            <if test="skuCode != null">#{skuCode},</if>
+            <if test="spData != null">#{spData},</if>
+            <if test="stock != null">#{stock},</if>
+        </trim>
+    </insert>
+
+    <insert id="insertProductSkuStockList">
+        INSERT INTO p_product_sku_stock (tenant_id, create_by, create_time, product_id, sku_code, price, stock,
+        low_stock, lock_stock, pic, sale, sp_data) VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.tenantId},
+            #{item.createBy},
+            #{item.createTime},
+            #{item.productId},
+            #{item.skuCode},
+            #{item.price},
+            #{item.stock},
+            #{item.lowStock},
+            #{item.lockStock},
+            #{item.pic},
+            #{item.sale},
+            #{item.spData})
+        </foreach>
+    </insert>
+
+    <update id="updateProductSkuStock" parameterType="ProductSkuStock">
+        update p_product_sku_stock
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="searchValue != null">search_value = #{searchValue},</if>
+            <if test="tenantId != null">tenant_id = #{tenantId},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="lockStock != null">lock_stock = #{lockStock},</if>
+            <if test="lowStock != null">low_stock = #{lowStock},</if>
+            <if test="pic != null">pic = #{pic},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="productId != null">product_id = #{productId},</if>
+            <if test="promotionPrice != null">promotion_price = #{promotionPrice},</if>
+            <if test="sale != null">sale = #{sale},</if>
+            <if test="skuCode != null">sku_code = #{skuCode},</if>
+            <if test="spData != null">sp_data = #{spData},</if>
+            <if test="stock != null">stock = #{stock},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteProductSkuStockByProductId" parameterType="Long">
+        delete
+        from p_product_sku_stock
+        where product_id = #{productId}
+    </delete>
+
+    <delete id="deleteProductSkuStockById" parameterType="Long">
+        delete
+        from p_product_sku_stock
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteProductSkuStockByIds" parameterType="Long">
+        delete from p_product_sku_stock where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

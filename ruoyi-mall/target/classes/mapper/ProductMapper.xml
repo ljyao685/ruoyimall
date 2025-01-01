@@ -1,0 +1,431 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.product.mapper.ProductMapper">
+
+    <resultMap type="Product" id="ProductResult">
+        <result property="id" column="id"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="remark" column="remark"/>
+        <result property="searchValue" column="search_value"/>
+        <result property="tenantId" column="tenant_id"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="albumPics" column="album_pics"/>
+        <result property="brandId" column="brand_id"/>
+        <result property="brandName" column="brand_name"/>
+        <result property="deleteStatus" column="delete_status"/>
+        <result property="description" column="description"/>
+        <result property="detailDesc" column="detail_desc"/>
+        <result property="detailHtml" column="detail_html"/>
+        <result property="detailMobileHtml" column="detail_mobile_html"/>
+        <result property="detailTitle" column="detail_title"/>
+        <result property="giftGrowth" column="gift_growth"/>
+        <result property="giftPoint" column="gift_point"/>
+        <result property="keywords" column="keywords"/>
+        <result property="lowStock" column="low_stock"/>
+        <result property="name" column="name"/>
+        <result property="newStatus" column="new_status"/>
+        <result property="originalPrice" column="original_price"/>
+        <result property="picture" column="picture"/>
+        <result property="previewStatus" column="preview_status"/>
+        <result property="price" column="price"/>
+        <result property="productAttributeCategoryId" column="product_attribute_category_id"/>
+        <result property="productCategoryId" column="product_category_id"/>
+        <result property="productCategoryName" column="product_category_name"/>
+        <result property="productSn" column="product_sn"/>
+        <result property="promotionEndTime" column="promotion_end_time"/>
+        <result property="promotionPerLimit" column="promotion_per_limit"/>
+        <result property="promotionPrice" column="promotion_price"/>
+        <result property="promotionStartTime" column="promotion_start_time"/>
+        <result property="promotionType" column="promotion_type"/>
+        <result property="publishStatus" column="publish_status"/>
+        <result property="recommendStatus" column="recommend_status"/>
+        <result property="sale" column="sale"/>
+        <result property="serviceIds" column="service_ids"/>
+        <result property="sort" column="sort"/>
+        <result property="stock" column="stock"/>
+        <result property="subTitle" column="sub_title"/>
+        <result property="unit" column="unit"/>
+        <result property="usePointLimit" column="use_point_limit"/>
+        <result property="verifyStatus" column="verify_status"/>
+        <result property="weight" column="weight"/>
+        <result property="weightTemplateId" column="weight_template_id"/>
+    </resultMap>
+
+    <resultMap id="ProductParamMap" type="ProductParam" extends="ProductResult">
+        <result column="cateParentId" jdbcType="BIGINT" property="cateParentId"/>
+        <collection property="productLadderList" columnPrefix="ladder_"
+                    resultMap="com.ruoyi.product.mapper.ProductLadderMapper.ProductLadderResult">
+        </collection>
+        <collection property="productFullReductionList" columnPrefix="full_"
+                    resultMap="com.ruoyi.product.mapper.ProductFullReductionMapper.ProductFullReductionResult">
+        </collection>
+        <collection property="memberPriceList" columnPrefix="member_"
+                    resultMap="com.ruoyi.product.mapper.ProductMemberPriceMapper.ProductMemberPriceResult">
+        </collection>
+        <collection property="skuStockList" columnPrefix="sku_"
+                    resultMap="com.ruoyi.product.mapper.ProductSkuStockMapper.ProductSkuStockResult">
+        </collection>
+        <collection property="productAttributeValueList" columnPrefix="attribute_"
+                    resultMap="com.ruoyi.product.mapper.ProductAttributeValueMapper.ProductAttributeValueResult">
+        </collection>
+        <collection property="subjectProductRelationList" columnPrefix="subject_"
+                    resultMap="com.ruoyi.product.mapper.ProductSubjectRelationMapper.ProductSubjectRelationResult">
+        </collection>
+        <collection property="preferenceAreaProductRelationList" columnPrefix="preference_area_"
+                    resultMap="com.ruoyi.product.mapper.ProductPreferenceAreaRelationMapper.ProductPreferenceAreaRelationResult">
+        </collection>
+
+    </resultMap>
+
+    <sql id="selectProductVo">
+        select id,
+               create_by,
+               create_time,
+               remark,
+               search_value,
+               tenant_id,
+               update_by,
+               update_time,
+               album_pics,
+               brand_id,
+               brand_name,
+               delete_status,
+               description,
+               detail_desc,
+               detail_html,
+               detail_mobile_html,
+               detail_title,
+               gift_growth,
+               gift_point,
+               keywords,
+               low_stock,
+               name,
+               new_status,
+               original_price,
+               picture,
+               preview_status,
+               price,
+               product_attribute_category_id,
+               product_category_id,
+               product_category_name,
+               product_sn,
+               promotion_end_time,
+               promotion_per_limit,
+               promotion_price,
+               promotion_start_time,
+               promotion_type,
+               publish_status,
+               recommend_status,
+               sale,
+               service_ids,
+               sort,
+               stock,
+               sub_title,
+               unit,
+               use_point_limit,
+               verify_status,
+               weight,
+               weight_template_id
+        from p_product
+    </sql>
+
+    <sql id="updateProductWhere">
+        <where>
+            <if test="brandId != null ">and brand_id = #{brandId}</if>
+            <if test="productCategoryId != null ">and product_category_id = #{productCategoryId}</if>
+            and delete_status = 0
+        </where>
+    </sql>
+
+    <select id="selectProductList" parameterType="Product" resultMap="ProductResult">
+        <include refid="selectProductVo"/>
+        <where>
+            <if test="searchValue != null  and searchValue != ''">and search_value = #{searchValue}</if>
+            <if test="tenantId != null ">and tenant_id = #{tenantId}</if>
+            <if test="albumPics != null  and albumPics != ''">and album_pics = #{albumPics}</if>
+            <if test="brandId != null ">and brand_id = #{brandId}</if>
+            <if test="brandName != null  and brandName != ''">and brand_name like concat('%', #{brandName}, '%')</if>
+            <if test="description != null  and description != ''">and description = #{description}</if>
+            <if test="detailDesc != null  and detailDesc != ''">and detail_desc = #{detailDesc}</if>
+            <if test="detailHtml != null  and detailHtml != ''">and detail_html = #{detailHtml}</if>
+            <if test="detailMobileHtml != null  and detailMobileHtml != ''">and detail_mobile_html =
+                #{detailMobileHtml}
+            </if>
+            <if test="detailTitle != null  and detailTitle != ''">and detail_title = #{detailTitle}</if>
+            <if test="giftGrowth != null ">and gift_growth = #{giftGrowth}</if>
+            <if test="giftPoint != null ">and gift_point = #{giftPoint}</if>
+            <if test="keywords != null  and keywords != ''">and keywords like concat('%', #{keywords}, '%')</if>
+            <if test="lowStock != null ">and low_stock = #{lowStock}</if>
+
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="newStatus != null ">and new_status = #{newStatus}</if>
+            <if test="originalPrice != null ">and original_price = #{originalPrice}</if>
+            <if test="picture != null  and picture != ''">and picture = #{picture}</if>
+            <if test="previewStatus != null ">and preview_status = #{previewStatus}</if>
+            <if test="price != null ">and price = #{price}</if>
+            <if test="productAttributeCategoryId != null ">and product_attribute_category_id =
+                #{productAttributeCategoryId}
+            </if>
+            <if test="productCategoryId != null ">and product_category_id = #{productCategoryId}</if>
+            <if test="productCategoryName != null  and productCategoryName != ''">and product_category_name like
+                concat('%', #{productCategoryName}, '%')
+            </if>
+            <if test="productSn != null  and productSn != ''">and product_sn = #{productSn}</if>
+            <if test="promotionEndTime != null ">and promotion_end_time = #{promotionEndTime}</if>
+            <if test="promotionPerLimit != null ">and promotion_per_limit = #{promotionPerLimit}</if>
+            <if test="promotionPrice != null ">and promotion_price = #{promotionPrice}</if>
+            <if test="promotionStartTime != null ">and promotion_start_time = #{promotionStartTime}</if>
+            <if test="promotionType != null ">and promotion_type = #{promotionType}</if>
+            <if test="publishStatus != null ">and publish_status = #{publishStatus}</if>
+            <if test="recommendStatus != null ">and recommend_status = #{recommendStatus}</if>
+            <if test="sale != null ">and sale = #{sale}</if>
+            <if test="serviceIds != null  and serviceIds != ''">and service_ids = #{serviceIds}</if>
+            <if test="sort != null ">and sort = #{sort}</if>
+            <if test="stock != null ">and stock = #{stock}</if>
+            <if test="subTitle != null  and subTitle != ''">and sub_title = #{subTitle}</if>
+            <if test="unit != null  and unit != ''">and unit = #{unit}</if>
+            <if test="usePointLimit != null ">and use_point_limit = #{usePointLimit}</if>
+            <if test="verifyStatus != null ">and verify_status = #{verifyStatus}</if>
+            <if test="weight != null ">and weight = #{weight}</if>
+            <if test="weightTemplateId != null ">and weight_template_id = #{weightTemplateId}</if>
+            and delete_status = 0
+        </where>
+    </select>
+
+    <select id="selectProductById" parameterType="Long" resultMap="ProductResult">
+        <include refid="selectProductVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectProductAllInfoById" resultMap="ProductParamMap">
+        SELECT *,
+               pc.parent_id           cateParentId,
+               l.id                   ladder_id,
+               l.product_id           ladder_product_id,
+               l.discount             ladder_discount,
+               l.count                ladder_count,
+               l.price                ladder_price,
+               pf.id                  full_id,
+               pf.product_id          full_product_id,
+               pf.full_price          full_full_price,
+               pf.reduce_price        full_reduce_price,
+               m.id                   member_id,
+               m.product_id           member_product_id,
+               m.member_level_id      member_member_level_id,
+               m.member_price         member_member_price,
+               m.member_level_name    member_member_level_name,
+               s.id                   sku_id,
+               s.product_id           sku_product_id,
+               s.price                sku_price,
+               s.low_stock            sku_low_stock,
+               s.pic                  sku_pic,
+               s.sale                 sku_sale,
+               s.sku_code             sku_sku_code,
+               s.stock                sku_stock,
+               s.sp_data              sku_sp_data,
+               a.id                   attribute_id,
+               a.product_id           attribute_product_id,
+               a.product_attribute_id attribute_product_attribute_id,
+               a.value                attribute_value,
+               sr.id                  subject_id,
+               sr.product_id          subject_product_id,
+               sr.subject_id          subject_subject_id,
+               par.id                 preference_area_id,
+               par.product_id         preference_area_product_id,
+               par.preference_area_id preference_area_preference_area_id
+        FROM p_product p
+                 LEFT JOIN p_product_category pc on pc.id = p.product_category_id
+                 LEFT JOIN p_product_ladder l ON p.id = l.product_id
+                 LEFT JOIN p_product_full_reduction pf ON pf.product_id = p.id
+                 LEFT JOIN p_product_member_price m ON m.product_id = p.id
+                 LEFT JOIN p_product_sku_stock s ON s.product_id = p.id
+                 LEFT JOIN p_product_attribute_value a ON a.product_id = p.id
+                 LEFT JOIN p_product_subject_relation sr ON sr.product_id = p.id
+                 LEFT JOIN p_product_preference_area_relation par ON par.product_id = p.id
+        WHERE p.id = #{id};
+    </select>
+
+    <insert id="insertProduct" parameterType="Product" useGeneratedKeys="true" keyProperty="id">
+        insert into p_product
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="searchValue != null">search_value,</if>
+            <if test="tenantId != null">tenant_id,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="albumPics != null">album_pics,</if>
+            <if test="brandId != null">brand_id,</if>
+            <if test="brandName != null">brand_name,</if>
+            <if test="deleteStatus != null">delete_status,</if>
+            <if test="description != null">description,</if>
+            <if test="detailDesc != null">detail_desc,</if>
+            <if test="detailHtml != null">detail_html,</if>
+            <if test="detailMobileHtml != null">detail_mobile_html,</if>
+            <if test="detailTitle != null">detail_title,</if>
+            <if test="giftGrowth != null">gift_growth,</if>
+            <if test="giftPoint != null">gift_point,</if>
+            <if test="keywords != null">keywords,</if>
+            <if test="lowStock != null">low_stock,</if>
+            <if test="name != null">name,</if>
+            <if test="newStatus != null">new_status,</if>
+            <if test="originalPrice != null">original_price,</if>
+            <if test="picture != null">picture,</if>
+            <if test="previewStatus != null">preview_status,</if>
+            <if test="price != null">price,</if>
+            <if test="productAttributeCategoryId != null">product_attribute_category_id,</if>
+            <if test="productCategoryId != null">product_category_id,</if>
+            <if test="productCategoryName != null">product_category_name,</if>
+            <if test="productSn != null">product_sn,</if>
+            <if test="promotionEndTime != null">promotion_end_time,</if>
+            <if test="promotionPerLimit != null">promotion_per_limit,</if>
+            <if test="promotionPrice != null">promotion_price,</if>
+            <if test="promotionStartTime != null">promotion_start_time,</if>
+            <if test="promotionType != null">promotion_type,</if>
+            <if test="publishStatus != null">publish_status,</if>
+            <if test="recommendStatus != null">recommend_status,</if>
+            <if test="sale != null">sale,</if>
+            <if test="serviceIds != null">service_ids,</if>
+            <if test="sort != null">sort,</if>
+            <if test="stock != null">stock,</if>
+            <if test="subTitle != null">sub_title,</if>
+            <if test="unit != null">unit,</if>
+            <if test="usePointLimit != null">use_point_limit,</if>
+            <if test="verifyStatus != null">verify_status,</if>
+            <if test="weight != null">weight,</if>
+            <if test="weightTemplateId != null">weight_template_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="searchValue != null">#{searchValue},</if>
+            <if test="tenantId != null">#{tenantId},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="albumPics != null">#{albumPics},</if>
+            <if test="brandId != null">#{brandId},</if>
+            <if test="brandName != null">#{brandName},</if>
+            <if test="deleteStatus != null">#{deleteStatus},</if>
+            <if test="description != null">#{description},</if>
+            <if test="detailDesc != null">#{detailDesc},</if>
+            <if test="detailHtml != null">#{detailHtml},</if>
+            <if test="detailMobileHtml != null">#{detailMobileHtml},</if>
+            <if test="detailTitle != null">#{detailTitle},</if>
+            <if test="giftGrowth != null">#{giftGrowth},</if>
+            <if test="giftPoint != null">#{giftPoint},</if>
+            <if test="keywords != null">#{keywords},</if>
+            <if test="lowStock != null">#{lowStock},</if>
+            <if test="name != null">#{name},</if>
+            <if test="newStatus != null">#{newStatus},</if>
+            <if test="originalPrice != null">#{originalPrice},</if>
+            <if test="picture != null">#{picture},</if>
+            <if test="previewStatus != null">#{previewStatus},</if>
+            <if test="price != null">#{price},</if>
+            <if test="productAttributeCategoryId != null">#{productAttributeCategoryId},</if>
+            <if test="productCategoryId != null">#{productCategoryId},</if>
+            <if test="productCategoryName != null">#{productCategoryName},</if>
+            <if test="productSn != null">#{productSn},</if>
+            <if test="promotionEndTime != null">#{promotionEndTime},</if>
+            <if test="promotionPerLimit != null">#{promotionPerLimit},</if>
+            <if test="promotionPrice != null">#{promotionPrice},</if>
+            <if test="promotionStartTime != null">#{promotionStartTime},</if>
+            <if test="promotionType != null">#{promotionType},</if>
+            <if test="publishStatus != null">#{publishStatus},</if>
+            <if test="recommendStatus != null">#{recommendStatus},</if>
+            <if test="sale != null">#{sale},</if>
+            <if test="serviceIds != null">#{serviceIds},</if>
+            <if test="sort != null">#{sort},</if>
+            <if test="stock != null">#{stock},</if>
+            <if test="subTitle != null">#{subTitle},</if>
+            <if test="unit != null">#{unit},</if>
+            <if test="usePointLimit != null">#{usePointLimit},</if>
+            <if test="verifyStatus != null">#{verifyStatus},</if>
+            <if test="weight != null">#{weight},</if>
+            <if test="weightTemplateId != null">#{weightTemplateId},</if>
+        </trim>
+    </insert>
+
+    <update id="updateProduct" parameterType="Product">
+        update p_product
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="searchValue != null">search_value = #{searchValue},</if>
+            <if test="tenantId != null">tenant_id = #{tenantId},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="albumPics != null">album_pics = #{albumPics},</if>
+            <if test="brandId != null">brand_id = #{brandId},</if>
+            <if test="brandName != null">brand_name = #{brandName},</if>
+            <if test="deleteStatus != null">delete_status = #{deleteStatus},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="detailDesc != null">detail_desc = #{detailDesc},</if>
+            <if test="detailHtml != null">detail_html = #{detailHtml},</if>
+            <if test="detailMobileHtml != null">detail_mobile_html = #{detailMobileHtml},</if>
+            <if test="detailTitle != null">detail_title = #{detailTitle},</if>
+            <if test="giftGrowth != null">gift_growth = #{giftGrowth},</if>
+            <if test="giftPoint != null">gift_point = #{giftPoint},</if>
+            <if test="keywords != null">keywords = #{keywords},</if>
+            <if test="lowStock != null">low_stock = #{lowStock},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="newStatus != null">new_status = #{newStatus},</if>
+            <if test="originalPrice != null">original_price = #{originalPrice},</if>
+            <if test="picture != null">picture = #{picture},</if>
+            <if test="previewStatus != null">preview_status = #{previewStatus},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="productAttributeCategoryId != null">product_attribute_category_id =
+                #{productAttributeCategoryId},
+            </if>
+            <if test="productCategoryId != null">product_category_id = #{productCategoryId},</if>
+            <if test="productCategoryName != null">product_category_name = #{productCategoryName},</if>
+            <if test="productSn != null">product_sn = #{productSn},</if>
+            <if test="promotionPerLimit != null">promotion_per_limit = #{promotionPerLimit},</if>
+            <if test="promotionPrice != null">promotion_price = #{promotionPrice},</if>
+            <if test="promotionType != null">promotion_type = #{promotionType},</if>
+            <if test="publishStatus != null">publish_status = #{publishStatus},</if>
+            <if test="recommendStatus != null">recommend_status = #{recommendStatus},</if>
+            <if test="sale != null">sale = #{sale},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="stock != null">stock = #{stock},</if>
+            <if test="subTitle != null">sub_title = #{subTitle},</if>
+            <if test="unit != null">unit = #{unit},</if>
+            <if test="usePointLimit != null">use_point_limit = #{usePointLimit},</if>
+            <if test="verifyStatus != null">verify_status = #{verifyStatus},</if>
+            <if test="weight != null">weight = #{weight},</if>
+            <if test="weightTemplateId != null">weight_template_id = #{weightTemplateId},</if>
+            promotion_start_time = #{promotionStartTime},
+            promotion_end_time = #{promotionEndTime},
+            service_ids = #{serviceIds},
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="updateProductByXXId" parameterType="Product">
+        update p_product
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="brandName != null">brand_name = #{brandName},</if>
+            <if test="productCategoryName != null">product_category_name = #{productCategoryName},</if>
+        </trim>
+        <include refid="updateProductWhere"></include>
+    </update>
+
+    <delete id="deleteProductById" parameterType="Long">
+        update p_product
+        set delete_status = 1
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteProductByIds" parameterType="Long">
+        update p_product set delete_status = 1 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
