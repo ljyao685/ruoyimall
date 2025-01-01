@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.content.mapper.PreferenceAreaMapper">
+
+    <resultMap type="PreferenceArea" id="PreferenceAreaResult">
+        <result property="id" column="id"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="remark" column="remark"/>
+        <result property="searchValue" column="search_value"/>
+        <result property="tenantId" column="tenant_id"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="name" column="name"/>
+        <result property="pic" column="pic"/>
+        <result property="productCount" column="product_count"/>
+        <result property="showStatus" column="show_status"/>
+        <result property="sort" column="sort"/>
+        <result property="subTitle" column="sub_title"/>
+    </resultMap>
+
+    <sql id="selectPreferenceAreaVo">
+        select id,
+               create_by,
+               create_time,
+               remark,
+               search_value,
+               tenant_id,
+               update_by,
+               update_time,
+               name,
+               pic,
+               product_count,
+               show_status,
+               sort,
+               sub_title
+        from c_preference_area
+    </sql>
+
+    <select id="selectPreferenceAreaList" parameterType="PreferenceArea" resultMap="PreferenceAreaResult">
+        <include refid="selectPreferenceAreaVo"/>
+        <where>
+            <if test="searchValue != null  and searchValue != ''">and search_value = #{searchValue}</if>
+            <if test="tenantId != null ">and tenant_id = #{tenantId}</if>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="pic != null  and pic != ''">and pic = #{pic}</if>
+            <if test="productCount != null ">and product_count = #{productCount}</if>
+            <if test="showStatus != null ">and show_status = #{showStatus}</if>
+            <if test="sort != null ">and sort = #{sort}</if>
+            <if test="subTitle != null  and subTitle != ''">and sub_title = #{subTitle}</if>
+        </where>
+    </select>
+
+    <select id="selectPreferenceAreaById" parameterType="Long" resultMap="PreferenceAreaResult">
+        <include refid="selectPreferenceAreaVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertPreferenceArea" parameterType="PreferenceArea" useGeneratedKeys="true" keyProperty="id">
+        insert into c_preference_area
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="searchValue != null">search_value,</if>
+            <if test="tenantId != null">tenant_id,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="name != null">name,</if>
+            <if test="pic != null">pic,</if>
+            <if test="productCount != null">product_count,</if>
+            <if test="showStatus != null">show_status,</if>
+            <if test="sort != null">sort,</if>
+            <if test="subTitle != null">sub_title,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="searchValue != null">#{searchValue},</if>
+            <if test="tenantId != null">#{tenantId},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="name != null">#{name},</if>
+            <if test="pic != null">#{pic},</if>
+            <if test="productCount != null">#{productCount},</if>
+            <if test="showStatus != null">#{showStatus},</if>
+            <if test="sort != null">#{sort},</if>
+            <if test="subTitle != null">#{subTitle},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePreferenceArea" parameterType="PreferenceArea">
+        update c_preference_area
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="searchValue != null">search_value = #{searchValue},</if>
+            <if test="tenantId != null">tenant_id = #{tenantId},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="pic != null">pic = #{pic},</if>
+            <if test="productCount != null">product_count = #{productCount},</if>
+            <if test="showStatus != null">show_status = #{showStatus},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="subTitle != null">sub_title = #{subTitle},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="updatePreferenceAreaProductCountByIds" parameterType="Long">
+        update c_preference_area pa
+        set pa.product_count=(select count(1) from p_product_preference_area_relation p where p.preference_area_id =
+        pa.id)
+        where pa.id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <delete id="deletePreferenceAreaById" parameterType="Long">
+        delete
+        from c_preference_area
+        where id = #{id}
+    </delete>
+
+    <delete id="deletePreferenceAreaByIds" parameterType="Long">
+        delete from c_preference_area where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

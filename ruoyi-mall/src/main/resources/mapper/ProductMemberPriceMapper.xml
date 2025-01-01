@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.product.mapper.ProductMemberPriceMapper">
+
+    <resultMap type="ProductMemberPrice" id="ProductMemberPriceResult">
+        <result property="id" column="id"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="remark" column="remark"/>
+        <result property="searchValue" column="search_value"/>
+        <result property="tenantId" column="tenant_id"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="memberLevelId" column="member_level_id"/>
+        <result property="memberLevelName" column="member_level_name"/>
+        <result property="memberPrice" column="member_price"/>
+        <result property="productId" column="product_id"/>
+    </resultMap>
+
+    <sql id="selectProductMemberPriceVo">
+        select id,
+               create_by,
+               create_time,
+               remark,
+               search_value,
+               tenant_id,
+               update_by,
+               update_time,
+               member_level_id,
+               member_level_name,
+               member_price,
+               product_id
+        from p_product_member_price
+    </sql>
+
+    <select id="selectProductMemberPriceList" parameterType="ProductMemberPrice" resultMap="ProductMemberPriceResult">
+        <include refid="selectProductMemberPriceVo"/>
+        <where>
+            <if test="searchValue != null  and searchValue != ''">and search_value = #{searchValue}</if>
+            <if test="tenantId != null ">and tenant_id = #{tenantId}</if>
+            <if test="memberLevelId != null ">and member_level_id = #{memberLevelId}</if>
+            <if test="memberLevelName != null  and memberLevelName != ''">and member_level_name like concat('%',
+                #{memberLevelName}, '%')
+            </if>
+            <if test="memberPrice != null ">and member_price = #{memberPrice}</if>
+            <if test="productId != null ">and product_id = #{productId}</if>
+        </where>
+    </select>
+
+    <select id="selectProductMemberPriceById" parameterType="Long" resultMap="ProductMemberPriceResult">
+        <include refid="selectProductMemberPriceVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertProductMemberPrice" parameterType="ProductMemberPrice" useGeneratedKeys="true" keyProperty="id">
+        insert into p_product_member_price
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="searchValue != null">search_value,</if>
+            <if test="tenantId != null">tenant_id,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="memberLevelId != null">member_level_id,</if>
+            <if test="memberLevelName != null">member_level_name,</if>
+            <if test="memberPrice != null">member_price,</if>
+            <if test="productId != null">product_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="searchValue != null">#{searchValue},</if>
+            <if test="tenantId != null">#{tenantId},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="memberLevelId != null">#{memberLevelId},</if>
+            <if test="memberLevelName != null">#{memberLevelName},</if>
+            <if test="memberPrice != null">#{memberPrice},</if>
+            <if test="productId != null">#{productId},</if>
+        </trim>
+    </insert>
+
+    <insert id="insertProductMemberPriceList">
+        INSERT INTO p_product_member_price (tenant_id, create_by, create_time, product_id, member_level_id,
+        member_level_name, member_price) VALUES
+        <foreach collection="list" separator="," item="item" index="index">
+            (#{item.tenantId},
+            #{item.createBy},
+            #{item.createTime},
+            #{item.productId},
+            #{item.memberLevelId},
+            #{item.memberLevelName},
+            #{item.memberPrice})
+        </foreach>
+    </insert>
+
+    <update id="updateProductMemberPrice" parameterType="ProductMemberPrice">
+        update p_product_member_price
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="searchValue != null">search_value = #{searchValue},</if>
+            <if test="tenantId != null">tenant_id = #{tenantId},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="memberLevelId != null">member_level_id = #{memberLevelId},</if>
+            <if test="memberLevelName != null">member_level_name = #{memberLevelName},</if>
+            <if test="memberPrice != null">member_price = #{memberPrice},</if>
+            <if test="productId != null">product_id = #{productId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteProductMemberPriceByProductId" parameterType="Long">
+        delete
+        from p_product_member_price
+        where product_id = #{productId}
+    </delete>
+
+    <delete id="deleteProductMemberPriceById" parameterType="Long">
+        delete
+        from p_product_member_price
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteProductMemberPriceByIds" parameterType="Long">
+        delete from p_product_member_price where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

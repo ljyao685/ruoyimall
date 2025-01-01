@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.product.mapper.ProductAttributeCategoryMapper">
+
+    <resultMap type="ProductAttributeCategory" id="ProductAttributeCategoryResult">
+        <result property="id" column="id"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="remark" column="remark"/>
+        <result property="searchValue" column="search_value"/>
+        <result property="tenantId" column="tenant_id"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="attributeCount" column="attribute_count"/>
+        <result property="name" column="name"/>
+        <result property="paramCount" column="param_count"/>
+    </resultMap>
+
+    <resultMap type="ProductAttribute" id="ProductAttributeResult">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+    </resultMap>
+
+    <resultMap id="ProdAttrCateListWithAttrMap" type="ProductAttributeCategory"
+               extends="ProductAttributeCategoryResult">
+        <collection property="prodAttrList" columnPrefix="attr_" resultMap="ProductAttributeResult">
+        </collection>
+    </resultMap>
+
+    <sql id="selectProductAttributeCategoryVo">
+        select id,
+               create_by,
+               create_time,
+               remark,
+               search_value,
+               tenant_id,
+               update_by,
+               update_time,
+               attribute_count,
+               name,
+               param_count
+        from p_product_attribute_category
+    </sql>
+
+    <select id="selectProductAttributeCategoryList" parameterType="ProductAttributeCategory"
+            resultMap="ProductAttributeCategoryResult">
+        <include refid="selectProductAttributeCategoryVo"/>
+        <where>
+            <if test="searchValue != null  and searchValue != ''">and search_value = #{searchValue}</if>
+            <if test="tenantId != null ">and tenant_id = #{tenantId}</if>
+            <if test="attributeCount != null ">and attribute_count = #{attributeCount}</if>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="paramCount != null ">and param_count = #{paramCount}</if>
+        </where>
+    </select>
+
+    <select id="selectProdAttrCateListWithAttr" resultMap="ProdAttrCateListWithAttrMap">
+        SELECT pac.id,
+               pac.name,
+               pa.id   attr_id,
+               pa.name attr_name
+        FROM p_product_attribute_category pac
+                 LEFT JOIN p_product_attribute pa ON pac.id = pa.product_attribute_category_id
+            AND pa.type = 1
+    </select>
+
+    <select id="selectProductAttributeCategoryById" parameterType="Long" resultMap="ProductAttributeCategoryResult">
+        <include refid="selectProductAttributeCategoryVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertProductAttributeCategory" parameterType="ProductAttributeCategory" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into p_product_attribute_category
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="searchValue != null">search_value,</if>
+            <if test="tenantId != null">tenant_id,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="attributeCount != null">attribute_count,</if>
+            <if test="name != null">name,</if>
+            <if test="paramCount != null">param_count,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="searchValue != null">#{searchValue},</if>
+            <if test="tenantId != null">#{tenantId},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="attributeCount != null">#{attributeCount},</if>
+            <if test="name != null">#{name},</if>
+            <if test="paramCount != null">#{paramCount},</if>
+        </trim>
+    </insert>
+
+    <update id="updateProductAttributeCategory" parameterType="ProductAttributeCategory">
+        update p_product_attribute_category
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="searchValue != null">search_value = #{searchValue},</if>
+            <if test="tenantId != null">tenant_id = #{tenantId},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="attributeCount != null">attribute_count = #{attributeCount},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="paramCount != null">param_count = #{paramCount},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteProductAttributeCategoryById" parameterType="Long">
+        delete
+        from p_product_attribute_category
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteProductAttributeCategoryByIds" parameterType="Long">
+        delete from p_product_attribute_category where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

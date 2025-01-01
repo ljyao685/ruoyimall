@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.member.mapper.MemberMapper">
+
+    <resultMap type="Member" id="MemberResult">
+        <result property="id" column="id"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="remark" column="remark"/>
+        <result property="searchValue" column="search_value"/>
+        <result property="tenantId" column="tenant_id"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="birthday" column="birthday"/>
+        <result property="city" column="city"/>
+        <result property="gender" column="gender"/>
+        <result property="growth" column="growth"/>
+        <result property="historyIntegration" column="history_integration"/>
+        <result property="icon" column="icon"/>
+        <result property="integration" column="integration"/>
+        <result property="memberLevelId" column="member_level_id"/>
+        <result property="nickname" column="nickname"/>
+        <result property="password" column="password"/>
+        <result property="personalizedSignature" column="personalized_signature"/>
+        <result property="phone" column="phone"/>
+        <result property="registerTime" column="register_time"/>
+        <result property="sourceType" column="source_type"/>
+        <result property="status" column="status"/>
+        <result property="username" column="username"/>
+    </resultMap>
+
+    <sql id="selectMemberVo">
+        select id,
+               create_by,
+               create_time,
+               remark,
+               search_value,
+               tenant_id,
+               update_by,
+               update_time,
+               birthday,
+               city,
+               gender,
+               growth,
+               history_integration,
+               icon,
+               integration,
+               member_level_id,
+               nickname,
+               password,
+               personalized_signature,
+               phone,
+               register_time,
+               source_type,
+               status,
+               username
+        from m_member
+    </sql>
+
+    <select id="selectMemberList" parameterType="Member" resultMap="MemberResult">
+        <include refid="selectMemberVo"/>
+        <where>
+            <if test="searchValue != null  and searchValue != ''">and search_value = #{searchValue}</if>
+            <if test="tenantId != null ">and tenant_id = #{tenantId}</if>
+            <if test="birthday != null ">and birthday = #{birthday}</if>
+            <if test="city != null  and city != ''">and city = #{city}</if>
+            <if test="gender != null ">and gender = #{gender}</if>
+            <if test="growth != null ">and growth = #{growth}</if>
+            <if test="historyIntegration != null ">and history_integration = #{historyIntegration}</if>
+            <if test="icon != null  and icon != ''">and icon = #{icon}</if>
+            <if test="integration != null ">and integration = #{integration}</if>
+            <if test="memberLevelId != null ">and member_level_id = #{memberLevelId}</if>
+            <if test="nickname != null  and nickname != ''">and nickname like concat('%', #{nickname}, '%')</if>
+            <if test="password != null  and password != ''">and password = #{password}</if>
+            <if test="personalizedSignature != null  and personalizedSignature != ''">and personalized_signature =
+                #{personalizedSignature}
+            </if>
+            <if test="phone != null  and phone != ''">and phone = #{phone}</if>
+            <if test="registerTime != null ">and register_time = #{registerTime}</if>
+            <if test="sourceType != null ">and source_type = #{sourceType}</if>
+            <if test="status != null ">and status = #{status}</if>
+            <if test="username != null  and username != ''">and username like concat('%', #{username}, '%')</if>
+        </where>
+    </select>
+
+    <select id="selectMemberById" parameterType="Long" resultMap="MemberResult">
+        <include refid="selectMemberVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertMember" parameterType="Member" useGeneratedKeys="true" keyProperty="id">
+        insert into m_member
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="searchValue != null">search_value,</if>
+            <if test="tenantId != null">tenant_id,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="birthday != null">birthday,</if>
+            <if test="city != null">city,</if>
+            <if test="gender != null">gender,</if>
+            <if test="growth != null">growth,</if>
+            <if test="historyIntegration != null">history_integration,</if>
+            <if test="icon != null">icon,</if>
+            <if test="integration != null">integration,</if>
+            <if test="memberLevelId != null">member_level_id,</if>
+            <if test="nickname != null">nickname,</if>
+            <if test="password != null">password,</if>
+            <if test="personalizedSignature != null">personalized_signature,</if>
+            <if test="phone != null">phone,</if>
+            <if test="registerTime != null">register_time,</if>
+            <if test="sourceType != null">source_type,</if>
+            <if test="status != null">status,</if>
+            <if test="username != null">username,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="searchValue != null">#{searchValue},</if>
+            <if test="tenantId != null">#{tenantId},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="birthday != null">#{birthday},</if>
+            <if test="city != null">#{city},</if>
+            <if test="gender != null">#{gender},</if>
+            <if test="growth != null">#{growth},</if>
+            <if test="historyIntegration != null">#{historyIntegration},</if>
+            <if test="icon != null">#{icon},</if>
+            <if test="integration != null">#{integration},</if>
+            <if test="memberLevelId != null">#{memberLevelId},</if>
+            <if test="nickname != null">#{nickname},</if>
+            <if test="password != null">#{password},</if>
+            <if test="personalizedSignature != null">#{personalizedSignature},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="registerTime != null">#{registerTime},</if>
+            <if test="sourceType != null">#{sourceType},</if>
+            <if test="status != null">#{status},</if>
+            <if test="username != null">#{username},</if>
+        </trim>
+    </insert>
+
+    <update id="updateMember" parameterType="Member">
+        update m_member
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="searchValue != null">search_value = #{searchValue},</if>
+            <if test="tenantId != null">tenant_id = #{tenantId},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="birthday != null">birthday = #{birthday},</if>
+            <if test="city != null">city = #{city},</if>
+            <if test="gender != null">gender = #{gender},</if>
+            <if test="growth != null">growth = #{growth},</if>
+            <if test="historyIntegration != null">history_integration = #{historyIntegration},</if>
+            <if test="icon != null">icon = #{icon},</if>
+            <if test="integration != null">integration = #{integration},</if>
+            <if test="memberLevelId != null">member_level_id = #{memberLevelId},</if>
+            <if test="nickname != null">nickname = #{nickname},</if>
+            <if test="password != null">password = #{password},</if>
+            <if test="personalizedSignature != null">personalized_signature = #{personalizedSignature},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="registerTime != null">register_time = #{registerTime},</if>
+            <if test="sourceType != null">source_type = #{sourceType},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="username != null">username = #{username},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMemberById" parameterType="Long">
+        delete
+        from m_member
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteMemberByIds" parameterType="Long">
+        delete from m_member where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

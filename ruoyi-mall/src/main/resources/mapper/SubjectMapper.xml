@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.content.mapper.SubjectMapper">
+
+    <resultMap type="Subject" id="SubjectResult">
+        <result property="id" column="id"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="remark" column="remark"/>
+        <result property="searchValue" column="search_value"/>
+        <result property="tenantId" column="tenant_id"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="albumPics" column="album_pics"/>
+        <result property="collectCount" column="collect_count"/>
+        <result property="commentCount" column="comment_count"/>
+        <result property="description" column="description"/>
+        <result property="forwardCount" column="forward_count"/>
+        <result property="name" column="name"/>
+        <result property="pic" column="pic"/>
+        <result property="productCount" column="product_count"/>
+        <result property="readCount" column="read_count"/>
+        <result property="recommendStatus" column="recommend_status"/>
+        <result property="showStatus" column="show_status"/>
+        <result property="subjectCategoryId" column="subject_category_id"/>
+        <result property="subjectCategoryName" column="subject_category_name"/>
+    </resultMap>
+
+    <sql id="selectSubjectVo">
+        select id,
+               create_by,
+               create_time,
+               remark,
+               search_value,
+               tenant_id,
+               update_by,
+               update_time,
+               album_pics,
+               collect_count,
+               comment_count,
+               description,
+               forward_count,
+               name,
+               pic,
+               product_count,
+               read_count,
+               recommend_status,
+               show_status,
+               subject_category_id,
+               subject_category_name
+        from c_subject
+    </sql>
+
+    <sql id="updateSubjectWhere">
+        <where>
+            <if test="subjectCategoryId != null ">and subject_category_id = #{subjectCategoryId}</if>
+        </where>
+    </sql>
+
+    <select id="selectSubjectList" parameterType="Subject" resultMap="SubjectResult">
+        <include refid="selectSubjectVo"/>
+        <where>
+            <if test="searchValue != null  and searchValue != ''">and search_value = #{searchValue}</if>
+            <if test="tenantId != null ">and tenant_id = #{tenantId}</if>
+            <if test="albumPics != null  and albumPics != ''">and album_pics = #{albumPics}</if>
+            <if test="collectCount != null ">and collect_count = #{collectCount}</if>
+            <if test="commentCount != null ">and comment_count = #{commentCount}</if>
+            <if test="description != null  and description != ''">and description = #{description}</if>
+            <if test="forwardCount != null ">and forward_count = #{forwardCount}</if>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="pic != null  and pic != ''">and pic = #{pic}</if>
+            <if test="productCount != null ">and product_count = #{productCount}</if>
+            <if test="readCount != null ">and read_count = #{readCount}</if>
+            <if test="recommendStatus != null ">and recommend_status = #{recommendStatus}</if>
+            <if test="showStatus != null ">and show_status = #{showStatus}</if>
+            <if test="subjectCategoryId != null ">and subject_category_id = #{subjectCategoryId}</if>
+            <if test="subjectCategoryName != null  and subjectCategoryName != ''">and subject_category_name like
+                concat('%', #{subjectCategoryName}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectSubjectById" parameterType="Long" resultMap="SubjectResult">
+        <include refid="selectSubjectVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSubject" parameterType="Subject" useGeneratedKeys="true" keyProperty="id">
+        insert into c_subject
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="searchValue != null">search_value,</if>
+            <if test="tenantId != null">tenant_id,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="albumPics != null">album_pics,</if>
+            <if test="collectCount != null">collect_count,</if>
+            <if test="commentCount != null">comment_count,</if>
+            <if test="description != null">description,</if>
+            <if test="forwardCount != null">forward_count,</if>
+            <if test="name != null">name,</if>
+            <if test="pic != null">pic,</if>
+            <if test="productCount != null">product_count,</if>
+            <if test="readCount != null">read_count,</if>
+            <if test="recommendStatus != null">recommend_status,</if>
+            <if test="showStatus != null">show_status,</if>
+            <if test="subjectCategoryId != null">subject_category_id,</if>
+            <if test="subjectCategoryName != null">subject_category_name,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="searchValue != null">#{searchValue},</if>
+            <if test="tenantId != null">#{tenantId},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="albumPics != null">#{albumPics},</if>
+            <if test="collectCount != null">#{collectCount},</if>
+            <if test="commentCount != null">#{commentCount},</if>
+            <if test="description != null">#{description},</if>
+            <if test="forwardCount != null">#{forwardCount},</if>
+            <if test="name != null">#{name},</if>
+            <if test="pic != null">#{pic},</if>
+            <if test="productCount != null">#{productCount},</if>
+            <if test="readCount != null">#{readCount},</if>
+            <if test="recommendStatus != null">#{recommendStatus},</if>
+            <if test="showStatus != null">#{showStatus},</if>
+            <if test="subjectCategoryId != null">#{subjectCategoryId},</if>
+            <if test="subjectCategoryName != null">#{subjectCategoryName},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSubject" parameterType="Subject">
+        update c_subject
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="searchValue != null">search_value = #{searchValue},</if>
+            <if test="tenantId != null">tenant_id = #{tenantId},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="albumPics != null">album_pics = #{albumPics},</if>
+            <if test="collectCount != null">collect_count = #{collectCount},</if>
+            <if test="commentCount != null">comment_count = #{commentCount},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="forwardCount != null">forward_count = #{forwardCount},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="pic != null">pic = #{pic},</if>
+            <if test="productCount != null">product_count = #{productCount},</if>
+            <if test="readCount != null">read_count = #{readCount},</if>
+            <if test="recommendStatus != null">recommend_status = #{recommendStatus},</if>
+            <if test="showStatus != null">show_status = #{showStatus},</if>
+            <if test="subjectCategoryId != null">subject_category_id = #{subjectCategoryId},</if>
+            <if test="subjectCategoryName != null">subject_category_name = #{subjectCategoryName},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="updateSubjectByXXId" parameterType="Subject">
+        update c_subject
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="subjectCategoryName != null">subject_category_name = #{subjectCategoryName},</if>
+        </trim>
+        <include refid="updateSubjectWhere"></include>
+    </update>
+
+    <update id="updateSubjectProductCountByIds" parameterType="Long">
+        update c_subject s
+        set s.product_count=(select count(1) from p_product_subject_relation p where p.subject_id = s.id)
+        where s.id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <delete id="deleteSubjectById" parameterType="Long">
+        delete
+        from c_subject
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteSubjectByIds" parameterType="Long">
+        delete from c_subject where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

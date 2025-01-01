@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.product.mapper.ProductAttributeValueMapper">
+
+    <resultMap type="ProductAttributeValue" id="ProductAttributeValueResult">
+        <result property="id" column="id"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="remark" column="remark"/>
+        <result property="searchValue" column="search_value"/>
+        <result property="tenantId" column="tenant_id"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="productAttributeId" column="product_attribute_id"/>
+        <result property="productId" column="product_id"/>
+        <result property="value" column="value"/>
+    </resultMap>
+
+    <sql id="selectProductAttributeValueVo">
+        select id,
+               create_by,
+               create_time,
+               remark,
+               search_value,
+               tenant_id,
+               update_by,
+               update_time,
+               product_attribute_id,
+               product_id,
+               value
+        from p_product_attribute_value
+    </sql>
+
+    <select id="selectProductAttributeValueList" parameterType="ProductAttributeValue"
+            resultMap="ProductAttributeValueResult">
+        <include refid="selectProductAttributeValueVo"/>
+        <where>
+            <if test="searchValue != null  and searchValue != ''">and search_value = #{searchValue}</if>
+            <if test="tenantId != null ">and tenant_id = #{tenantId}</if>
+            <if test="productAttributeId != null ">and product_attribute_id = #{productAttributeId}</if>
+            <if test="productId != null ">and product_id = #{productId}</if>
+            <if test="value != null  and value != ''">and value = #{value}</if>
+        </where>
+    </select>
+
+    <select id="selectProductAttributeValueById" parameterType="Long" resultMap="ProductAttributeValueResult">
+        <include refid="selectProductAttributeValueVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertProductAttributeValue" parameterType="ProductAttributeValue" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into p_product_attribute_value
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="searchValue != null">search_value,</if>
+            <if test="tenantId != null">tenant_id,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="productAttributeId != null">product_attribute_id,</if>
+            <if test="productId != null">product_id,</if>
+            <if test="value != null">value,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="searchValue != null">#{searchValue},</if>
+            <if test="tenantId != null">#{tenantId},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="productAttributeId != null">#{productAttributeId},</if>
+            <if test="productId != null">#{productId},</if>
+            <if test="value != null">#{value},</if>
+        </trim>
+    </insert>
+
+    <insert id="insertProductAttributeValueList">
+        INSERT INTO p_product_attribute_value (tenant_id, create_by, create_time, product_id, product_attribute_id,
+        value) VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.tenantId},
+            #{item.createBy},
+            #{item.createTime},
+            #{item.productId},
+            #{item.productAttributeId},
+            #{item.value})
+        </foreach>
+    </insert>
+
+    <update id="updateProductAttributeValue" parameterType="ProductAttributeValue">
+        update p_product_attribute_value
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="searchValue != null">search_value = #{searchValue},</if>
+            <if test="tenantId != null">tenant_id = #{tenantId},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="productAttributeId != null">product_attribute_id = #{productAttributeId},</if>
+            <if test="productId != null">product_id = #{productId},</if>
+            <if test="value != null">value = #{value},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteProductAttributeValueByProductId" parameterType="Long">
+        delete
+        from p_product_attribute_value
+        where product_id = #{productId}
+    </delete>
+
+    <delete id="deleteProductAttributeValueById" parameterType="Long">
+        delete
+        from p_product_attribute_value
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteProductAttributeValueByIds" parameterType="Long">
+        delete from p_product_attribute_value where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.product.mapper.BrandMapper">
+
+    <resultMap type="Brand" id="BrandResult">
+        <result property="id" column="id"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="remark" column="remark"/>
+        <result property="searchValue" column="search_value"/>
+        <result property="tenantId" column="tenant_id"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="bigPic" column="big_pic"/>
+        <result property="brandStory" column="brand_story"/>
+        <result property="factoryStatus" column="factory_status"/>
+        <result property="firstLetter" column="first_letter"/>
+        <result property="logo" column="logo"/>
+        <result property="name" column="name"/>
+        <result property="productCommentCount" column="product_comment_count"/>
+        <result property="productCount" column="product_count"/>
+        <result property="showStatus" column="show_status"/>
+        <result property="sort" column="sort"/>
+    </resultMap>
+
+    <sql id="selectBrandVo">
+        select id,
+               create_by,
+               create_time,
+               remark,
+               search_value,
+               tenant_id,
+               update_by,
+               update_time,
+               big_pic,
+               brand_story,
+               factory_status,
+               first_letter,
+               logo,
+               name,
+               product_comment_count,
+               product_count,
+               show_status,
+               sort
+        from p_brand
+    </sql>
+
+    <select id="selectBrandList" parameterType="Brand" resultMap="BrandResult">
+        <include refid="selectBrandVo"/>
+        <where>
+            <if test="searchValue != null  and searchValue != ''">and search_value = #{searchValue}</if>
+            <if test="tenantId != null ">and tenant_id = #{tenantId}</if>
+            <if test="bigPic != null  and bigPic != ''">and big_pic = #{bigPic}</if>
+            <if test="brandStory != null  and brandStory != ''">and brand_story = #{brandStory}</if>
+            <if test="factoryStatus != null ">and factory_status = #{factoryStatus}</if>
+            <if test="firstLetter != null  and firstLetter != ''">and first_letter = #{firstLetter}</if>
+            <if test="logo != null  and logo != ''">and logo = #{logo}</if>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="productCommentCount != null ">and product_comment_count = #{productCommentCount}</if>
+            <if test="productCount != null ">and product_count = #{productCount}</if>
+            <if test="showStatus != null ">and show_status = #{showStatus}</if>
+            <if test="sort != null ">and sort = #{sort}</if>
+        </where>
+    </select>
+
+    <select id="selectBrandById" parameterType="Long" resultMap="BrandResult">
+        <include refid="selectBrandVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertBrand" parameterType="Brand" useGeneratedKeys="true" keyProperty="id">
+        insert into p_brand
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="searchValue != null">search_value,</if>
+            <if test="tenantId != null">tenant_id,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="bigPic != null">big_pic,</if>
+            <if test="brandStory != null">brand_story,</if>
+            <if test="factoryStatus != null">factory_status,</if>
+            <if test="firstLetter != null">first_letter,</if>
+            <if test="logo != null">logo,</if>
+            <if test="name != null">name,</if>
+            <if test="productCommentCount != null">product_comment_count,</if>
+            <if test="productCount != null">product_count,</if>
+            <if test="showStatus != null">show_status,</if>
+            <if test="sort != null">sort,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="searchValue != null">#{searchValue},</if>
+            <if test="tenantId != null">#{tenantId},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="bigPic != null">#{bigPic},</if>
+            <if test="brandStory != null">#{brandStory},</if>
+            <if test="factoryStatus != null">#{factoryStatus},</if>
+            <if test="firstLetter != null">#{firstLetter},</if>
+            <if test="logo != null">#{logo},</if>
+            <if test="name != null">#{name},</if>
+            <if test="productCommentCount != null">#{productCommentCount},</if>
+            <if test="productCount != null">#{productCount},</if>
+            <if test="showStatus != null">#{showStatus},</if>
+            <if test="sort != null">#{sort},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBrand" parameterType="Brand">
+        update p_brand
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="searchValue != null">search_value = #{searchValue},</if>
+            <if test="tenantId != null">tenant_id = #{tenantId},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="bigPic != null">big_pic = #{bigPic},</if>
+            <if test="brandStory != null">brand_story = #{brandStory},</if>
+            <if test="factoryStatus != null">factory_status = #{factoryStatus},</if>
+            <if test="firstLetter != null">first_letter = #{firstLetter},</if>
+            <if test="logo != null">logo = #{logo},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="productCommentCount != null">product_comment_count = #{productCommentCount},</if>
+            <if test="productCount != null">product_count = #{productCount},</if>
+            <if test="showStatus != null">show_status = #{showStatus},</if>
+            <if test="sort != null">sort = #{sort},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBrandById" parameterType="Long">
+        delete
+        from p_brand
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteBrandByIds" parameterType="Long">
+        delete from p_brand where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
